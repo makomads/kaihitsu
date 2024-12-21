@@ -34,6 +34,7 @@ struct ConfigData
     int scrollsize;
     QVector<FileTypeConfig> filetypes;
     int maxrecent;
+    bool inactiveautosave;
 };
 
 class ConfigDialog : public QDialog

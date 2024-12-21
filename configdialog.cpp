@@ -37,6 +37,7 @@ int ConfigDialog::exec(const ConfigData &configdata)
     ui->edt_filesize_max->setText(tr("%1").arg(data.maxfilesizemb));
     ui->edt_scrollsize->setText(tr("%1").arg(data.scrollsize));
     ui->edt_maxrecent->setText(tr("%1").arg(data.maxrecent));
+    ui->chk_inactsave->setChecked(data.inactiveautosave);
 
     //タイプ別設定タブ
     for(int i=0; i<data.filetypes.size(); i++){
@@ -93,6 +94,7 @@ void ConfigDialog::on_btnapply_clicked()
     if(!ok) data.scrollsize = 5;
     data.maxrecent = ui->edt_maxrecent->text().toInt(&ok);
     if(!ok) data.maxrecent = 20;
+    data.inactiveautosave = ui->chk_inactsave->isChecked();
 
     //ファイルタイプタブ
     fileTypePageToData(ui->lsttypes->currentItem());

@@ -172,6 +172,8 @@ MainWindow::MainWindow(QWidget *parent) :
     conf.warningfilesizemb = settings.value("warningfilesize_mb",defconf.warningfilesizemb).toInt();
     conf.scrollsize = settings.value("scrollsize",defconf.scrollsize).toInt();
     conf.maxrecent = settings.value("maxrecent",defconf.maxrecent).toInt();
+    conf.inactiveautosave = settings.value("inactiveautosave",defconf.inactiveautosave).toBool();
+
     lastdir = settings.value("lastdir","").toString();
     settings.endGroup();
 
@@ -303,6 +305,7 @@ ConfigData MainWindow::createDefaultConfig()
     confdata.warningfilesizemb = 30;
     confdata.scrollsize = 5;
     confdata.maxrecent = 20;
+    confdata.inactiveautosave = false;
 
     //属性
     EditorAttributeSet *attribset;
@@ -494,6 +497,7 @@ void MainWindow::writeSettings()
     settings.setValue("warningfilesize_mb",conf.warningfilesizemb);
     settings.setValue("maxfilesize_mb",conf.maxfilesizemb);
     settings.setValue("scrollsize",conf.scrollsize);
+    settings.setValue("inactiveautosave",conf.inactiveautosave);
     settings.setValue("lastdir",lastdir);
     settings.endGroup();
 
@@ -878,6 +882,23 @@ void MainWindow::showEvent(QShowEvent *e)
 
 }
 
+void MainWindow::focusOutEvent(QFocusEvent *e)
+{
+
+
+}
+
+void MainWindow::changeEvent(QEvent *e)
+{
+    if(e->type()==QEvent::ActivationChange){
+        //非アクティブ時に自動保存
+        if(!isActiveWindow() && conf.inactiveautosave){
+            saveAll();
+        }
+    }
+
+}
+
 
 
 
@@ -1038,7 +1059,18 @@ void MainWindow::save()
 
 void MainWindow::saveAll()
 {
+    int i;
+    Model *m = activeModel();
+    QString codecname = ui->actionTextencoding_output->data().toStringList().at(0);
+    QString lineend = ui->actionTextencoding_output->data().toStringList().at(1);
 
+    for(i=0; i<models.size(); i++){
+        if(m->filePath().isEmpty())
+            continue;
+        m->save(codecname, lineend);
+        filehistory.update(m->filePath(), m->GetScrollPos());
+    }
+    updateMenuRecent();
 }
 
 

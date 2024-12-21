@@ -64,6 +64,8 @@ public:
     void closeEvent(QCloseEvent *e);
     void resizeEvent(QResizeEvent *e);
     void showEvent(QShowEvent *e);
+    void focusOutEvent(QFocusEvent *e);
+    void changeEvent(QEvent *event);
     void firstShowEvent();
     Model* activeModel();
     FileTypeConfig findFileTypeByExtention(const QString& ext);

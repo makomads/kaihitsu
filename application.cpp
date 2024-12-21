@@ -26,7 +26,8 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::addLibraryPath("./");
+    //QCoreApplication::addLibraryPath("./");
+    QCoreApplication::addLibraryPath(QCoreApplication::applicationDirPath());
     Application app(argc, argv);
 
     QTranslator translator;

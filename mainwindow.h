@@ -68,7 +68,6 @@ public:
     void changeEvent(QEvent *event);
     void firstShowEvent();
     Model* activeModel();
-    FileTypeConfig findFileTypeByExtention(const QString& ext);
     void setTextEncodingMenu(QAction *action, QString menutext, QString codecname, QString lineend);
     void updateMenuRecent();
 

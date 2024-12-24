@@ -117,7 +117,7 @@ void Model::applyConfig(ConfigData *configdata)
     QFileInfo fileinfo(filepath);
 
     //拡張子で適用するコンフィグを選ぶ
-    filetypeconf = &configdata->filetypes[0];
+    filetypeconf = &configdata->filetypes[0];   //まず要素0番のデフォルトコンフィグを入れてnullを防ぐ
     for(int i=1; i<configdata->filetypes.size(); i++){
         for(QStringList::iterator it=configdata->filetypes[i].exts.begin();
             it!=configdata->filetypes[i].exts.end(); it++){

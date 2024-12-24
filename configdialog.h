@@ -18,6 +18,8 @@ struct FileTypeConfig
     int tabsize;
     int wrapsize;
     bool autowrap;
+    bool autoindent;
+    bool focusoutsave;
     EditorAttributeSet attrset;
 };
 
@@ -34,7 +36,6 @@ struct ConfigData
     int scrollsize;
     QVector<FileTypeConfig> filetypes;
     int maxrecent;
-    bool inactiveautosave;
 };
 
 class ConfigDialog : public QDialog

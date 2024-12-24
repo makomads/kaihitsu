@@ -37,7 +37,6 @@ int ConfigDialog::exec(const ConfigData &configdata)
     ui->edt_filesize_max->setText(tr("%1").arg(data.maxfilesizemb));
     ui->edt_scrollsize->setText(tr("%1").arg(data.scrollsize));
     ui->edt_maxrecent->setText(tr("%1").arg(data.maxrecent));
-    ui->chk_inactsave->setChecked(data.inactiveautosave);
 
     //タイプ別設定タブ
     for(int i=0; i<data.filetypes.size(); i++){
@@ -94,7 +93,6 @@ void ConfigDialog::on_btnapply_clicked()
     if(!ok) data.scrollsize = 5;
     data.maxrecent = ui->edt_maxrecent->text().toInt(&ok);
     if(!ok) data.maxrecent = 20;
-    data.inactiveautosave = ui->chk_inactsave->isChecked();
 
     //ファイルタイプタブ
     fileTypePageToData(ui->lsttypes->currentItem());
@@ -134,6 +132,9 @@ void ConfigDialog::fileTypePageToData(QListWidgetItem* listitem)
     filetype->wrapsize = ui->txtwrapsize->text().toInt(&ok);
     if(!ok) filetype->wrapsize = 80;
     filetype->autowrap = ui->chkautowrap->isChecked();
+    filetype->autoindent = ui->chkautoindent->isChecked();
+    filetype->focusoutsave = ui->chk_focusoutsave->isChecked();
+
     filetype->attrset.clear();
     for(int i=0; i<ui->lstattributes->rowCount(); i++){
         EditorAttribute attr;
@@ -193,6 +194,9 @@ void ConfigDialog::dataToFiletypePage(QListWidgetItem *listitem)
     ui->txttabsize->setText(tr("%1").arg(ftc->tabsize));
     ui->txtwrapsize->setText(tr("%1").arg(ftc->wrapsize));
     ui->chkautowrap->setChecked(ftc->autowrap);
+    ui->chkautoindent->setChecked(ftc->autoindent);
+    ui->chk_focusoutsave->setChecked(ftc->focusoutsave);
+
     ui->lstattributes->clearContents();
     ui->lstattributes->setRowCount(0);
     for(int i=0; i<ftc->attrset.size(); i++){

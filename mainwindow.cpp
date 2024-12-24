@@ -165,6 +165,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     defconf = createDefaultConfig();
 
+    //共通設定
     settings.beginGroup("common");
     conf.fontsize   = settings.value("fontsize",defconf.fontsize).toInt();
     conf.lineheight = settings.value("lineheight",defconf.lineheight).toInt();
@@ -173,11 +174,11 @@ MainWindow::MainWindow(QWidget *parent) :
     conf.warningfilesizemb = settings.value("warningfilesize_mb",defconf.warningfilesizemb).toInt();
     conf.scrollsize = settings.value("scrollsize",defconf.scrollsize).toInt();
     conf.maxrecent = settings.value("maxrecent",defconf.maxrecent).toInt();
-    conf.inactiveautosave = settings.value("inactiveautosave",defconf.inactiveautosave).toBool();
 
     lastdir = settings.value("lastdir","").toString();
     settings.endGroup();
 
+    //ファイルタイプ別設定
     size = settings.beginReadArray("filetypes");
     for(int i=0; i<size; i++){
         FileTypeConfig filetype;
@@ -187,6 +188,8 @@ MainWindow::MainWindow(QWidget *parent) :
         filetype.tabsize = settings.value("tabsize",8).toInt();
         filetype.autowrap = settings.value("autowrap",false).toBool();
         filetype.wrapsize = settings.value("wrapsize",80).toInt();
+        filetype.autoindent = settings.value("autoindent",false).toBool();
+        filetype.focusoutsave = settings.value("focusoutsave",false).toBool();
 
         int attrsize = settings.beginReadArray("attributes");
         for(int j=0; j<attrsize; j++){
@@ -302,7 +305,6 @@ ConfigData MainWindow::createDefaultConfig()
     confdata.warningfilesizemb = 30;
     confdata.scrollsize = 5;
     confdata.maxrecent = 20;
-    confdata.inactiveautosave = false;
 
     //属性
     EditorAttributeSet *attribset;
@@ -494,7 +496,6 @@ void MainWindow::writeSettings()
     settings.setValue("warningfilesize_mb",conf.warningfilesizemb);
     settings.setValue("maxfilesize_mb",conf.maxfilesizemb);
     settings.setValue("scrollsize",conf.scrollsize);
-    settings.setValue("inactiveautosave",conf.inactiveautosave);
     settings.setValue("lastdir",lastdir);
     settings.endGroup();
 
@@ -507,6 +508,8 @@ void MainWindow::writeSettings()
         settings.setValue("tabsize", filetype.tabsize);
         settings.setValue("autowrap", filetype.autowrap);
         settings.setValue("wrapsize", filetype.wrapsize);
+        settings.setValue("autoindent", filetype.autoindent);
+        settings.setValue("focusoutsave", filetype.focusoutsave);
         settings.beginWriteArray("attributes");
         for(int j=0; j<filetype.attrset.size(); j++){
             settings.setArrayIndex(j);
@@ -564,16 +567,6 @@ Model *MainWindow::activeModel()
     return  ui->tabbar->tabData(ui->tabbar->currentIndex()).value<Model*>();
 }
 
-
-FileTypeConfig MainWindow::findFileTypeByExtention(const QString &ext)
-{
-    int idx=0;  //0はデフォルトタイプ
-    for(int i=0; i<conf.filetypes.size(); i++){
-        if(conf.filetypes[i].exts.contains(ext.toLower()))
-            break;
-    }
-    return conf.filetypes[idx];
-}
 
 void MainWindow::setTextEncodingMenu(QAction *action, QString menutext, QString codecname, QString lineend)
 {
@@ -889,7 +882,8 @@ void MainWindow::changeEvent(QEvent *e)
 {
     if(e->type()==QEvent::ActivationChange){
         //非アクティブ時に自動保存
-        if(!isActiveWindow() && conf.inactiveautosave){
+        FileTypeConfig *filetypeconf = activeModel()->getFileTypeConfig();
+        if(!isActiveWindow() && filetypeconf->focusoutsave){
             saveAll();
         }
     }

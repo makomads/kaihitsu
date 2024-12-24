@@ -22,44 +22,44 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="169"/>
+        <location filename="configdialog.ui" line="103"/>
         <source>ファイルサイズ警告:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="196"/>
+        <location filename="configdialog.ui" line="208"/>
         <source>行の高さ:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="176"/>
+        <location filename="configdialog.ui" line="37"/>
         <source>フォント:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="203"/>
+        <location filename="configdialog.ui" line="256"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ファイルサイズ上限:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="113"/>
-        <location filename="configdialog.ui" line="247"/>
+        <location filename="configdialog.ui" line="81"/>
+        <location filename="configdialog.ui" line="125"/>
         <source>px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="42"/>
-        <location filename="configdialog.ui" line="76"/>
+        <location filename="configdialog.ui" line="159"/>
+        <location filename="configdialog.ui" line="227"/>
         <source>MB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="135"/>
+        <location filename="configdialog.ui" line="249"/>
         <source>スクロール量:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="269"/>
+        <location filename="configdialog.ui" line="30"/>
         <source>最近のファイル最大数</source>
         <translation type="unfinished"></translation>
     </message>
@@ -70,115 +70,120 @@
     </message>
     <message>
         <location filename="configdialog.ui" line="333"/>
-        <location filename="configdialog.ui" line="574"/>
+        <location filename="configdialog.ui" line="581"/>
         <source>↑</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="configdialog.ui" line="346"/>
-        <location filename="configdialog.ui" line="587"/>
+        <location filename="configdialog.ui" line="594"/>
         <source>↓</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="configdialog.ui" line="370"/>
-        <location filename="configdialog.ui" line="594"/>
+        <location filename="configdialog.ui" line="601"/>
         <source>追加</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="configdialog.ui" line="390"/>
-        <location filename="configdialog.ui" line="601"/>
+        <location filename="configdialog.ui" line="608"/>
         <source>削除</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="405"/>
+        <location filename="configdialog.ui" line="466"/>
         <source>設定名</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="412"/>
+        <location filename="configdialog.ui" line="415"/>
         <source>拡張子</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="419"/>
+        <location filename="configdialog.ui" line="405"/>
         <source>タブ幅</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="426"/>
+        <location filename="configdialog.ui" line="449"/>
         <source>行の文字数</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="478"/>
+        <location filename="configdialog.ui" line="485"/>
         <source>自動折り返し</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="500"/>
+        <location filename="configdialog.ui" line="459"/>
         <source>オートインデント</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="509"/>
+        <location filename="configdialog.ui" line="507"/>
+        <source>フォーカスを失ったら保存</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="configdialog.ui" line="516"/>
         <source>色と強調表示</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="523"/>
+        <location filename="configdialog.ui" line="530"/>
         <source>名前</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="528"/>
+        <location filename="configdialog.ui" line="535"/>
         <source>種別</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="533"/>
+        <location filename="configdialog.ui" line="540"/>
         <source>文字列</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="538"/>
+        <location filename="configdialog.ui" line="545"/>
         <source>文字色</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="543"/>
+        <location filename="configdialog.ui" line="550"/>
         <source>背景色</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="548"/>
+        <location filename="configdialog.ui" line="555"/>
         <source>B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="553"/>
+        <location filename="configdialog.ui" line="560"/>
         <source>I</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="558"/>
+        <location filename="configdialog.ui" line="565"/>
         <source>U</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="644"/>
+        <location filename="configdialog.ui" line="651"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="651"/>
+        <location filename="configdialog.ui" line="658"/>
         <source>キャンセル</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.ui" line="658"/>
+        <location filename="configdialog.ui" line="665"/>
         <source>適用</source>
         <translation type="unfinished"></translation>
     </message>
@@ -195,21 +200,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="configdialog.cpp" line="429"/>
-        <source>範囲</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="configdialog.cpp" line="430"/>
-        <source>単語</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="configdialog.cpp" line="431"/>
-        <source>正規表現</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="configdialog.cpp" line="222"/>
         <source>%1,%2</source>
         <translation type="unfinished"></translation>
@@ -221,21 +211,25 @@
     </message>
     <message>
         <location filename="configdialog.cpp" line="214"/>
+        <location filename="configdialog.cpp" line="428"/>
         <source>tr_attype_range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="configdialog.cpp" line="215"/>
+        <location filename="configdialog.cpp" line="429"/>
         <source>tr_attype_word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="configdialog.cpp" line="216"/>
+        <location filename="configdialog.cpp" line="430"/>
         <source>tr_attype_regexp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="configdialog.cpp" line="217"/>
+        <location filename="configdialog.cpp" line="431"/>
         <source>tr_attype_multilne</source>
         <translation type="unfinished"></translation>
     </message>
@@ -248,54 +242,49 @@
     </message>
     <message>
         <location filename="configdialog.cpp" line="288"/>
-        <location filename="configdialog.cpp" line="424"/>
+        <location filename="configdialog.cpp" line="423"/>
         <source>item%1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="configdialog.cpp" line="432"/>
-        <source>複数行範囲</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>EditorView</name>
     <message>
-        <location filename="editorview.cpp" line="698"/>
-        <location filename="editorview.cpp" line="745"/>
+        <location filename="editorview.cpp" line="699"/>
+        <location filename="editorview.cpp" line="747"/>
         <source>
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editorview.cpp" line="708"/>
+        <location filename="editorview.cpp" line="709"/>
         <source>%13 %11 crt:(prg%12,hy%1,ry%2,x%3) org:(hy%8,ry%9,x%10) mx=%4,idx=%6,nattr=%7 Scroll:%5
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editorview.cpp" line="727"/>
-        <source>stsym:%1:%3,edsym%2:%4
+        <location filename="editorview.cpp" line="728"/>
+        <source>%5 stsym:%1:%3,edsym%2:%4
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editorview.cpp" line="745"/>
+        <location filename="editorview.cpp" line="747"/>
         <source>\n</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editorview.cpp" line="746"/>
+        <location filename="editorview.cpp" line="748"/>
         <source>	</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editorview.cpp" line="746"/>
+        <location filename="editorview.cpp" line="748"/>
         <source>\t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editorview.cpp" line="747"/>
+        <location filename="editorview.cpp" line="749"/>
         <source>(type%1,prgidx%2,txtidx%3,%4)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -651,184 +640,184 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="98"/>
+        <location filename="mainwindow.cpp" line="99"/>
         <source>tr_title</source>
         <translation type="unfinished">Kaihitsu</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="140"/>
-        <location filename="mainwindow.cpp" line="684"/>
-        <location filename="mainwindow.cpp" line="694"/>
+        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="678"/>
+        <location filename="mainwindow.cpp" line="688"/>
         <source>tr_input</source>
         <translation type="unfinished">Input</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="143"/>
-        <location filename="mainwindow.cpp" line="688"/>
-        <location filename="mainwindow.cpp" line="696"/>
+        <location filename="mainwindow.cpp" line="144"/>
+        <location filename="mainwindow.cpp" line="682"/>
+        <location filename="mainwindow.cpp" line="690"/>
         <source>tr_output</source>
         <translation type="unfinished">Output</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="182"/>
-        <location filename="mainwindow.cpp" line="195"/>
+        <location filename="mainwindow.cpp" line="186"/>
+        <location filename="mainwindow.cpp" line="201"/>
         <source>item%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="205"/>
-        <location filename="mainwindow.cpp" line="215"/>
-        <location filename="mainwindow.cpp" line="653"/>
+        <location filename="mainwindow.cpp" line="211"/>
+        <location filename="mainwindow.cpp" line="221"/>
+        <location filename="mainwindow.cpp" line="647"/>
         <source>%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="321"/>
+        <location filename="mainwindow.cpp" line="323"/>
         <source>tr_attr_text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="324"/>
+        <location filename="mainwindow.cpp" line="326"/>
         <source>tr_attr_cursor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="327"/>
+        <location filename="mainwindow.cpp" line="329"/>
         <source>tr_attr_selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="330"/>
+        <location filename="mainwindow.cpp" line="332"/>
         <source>tr_attr_find</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="333"/>
+        <location filename="mainwindow.cpp" line="335"/>
         <source>tr_attr_background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="336"/>
+        <location filename="mainwindow.cpp" line="338"/>
         <source>tr_attr_impreedit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="339"/>
+        <location filename="mainwindow.cpp" line="341"/>
         <source>tr_attr_imcommit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="342"/>
+        <location filename="mainwindow.cpp" line="344"/>
         <source>tr_attr_lineno</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="345"/>
+        <location filename="mainwindow.cpp" line="347"/>
         <source>tr_attr_ruler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="438"/>
+        <location filename="mainwindow.cpp" line="440"/>
         <source>*</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="585"/>
-        <location filename="mainwindow.cpp" line="587"/>
+        <location filename="mainwindow.cpp" line="579"/>
+        <location filename="mainwindow.cpp" line="581"/>
         <source>tr_auto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="592"/>
+        <location filename="mainwindow.cpp" line="586"/>
         <source>%1(%2,%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="664"/>
+        <location filename="mainwindow.cpp" line="658"/>
         <source>文字コード</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="665"/>
+        <location filename="mainwindow.cpp" line="659"/>
         <source>文字コード:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="666"/>
+        <location filename="mainwindow.cpp" line="660"/>
         <source>改行:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="757"/>
+        <location filename="mainwindow.cpp" line="751"/>
         <source>バージョン</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="788"/>
-        <location filename="mainwindow.cpp" line="808"/>
+        <location filename="mainwindow.cpp" line="782"/>
+        <location filename="mainwindow.cpp" line="802"/>
         <source>%1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="852"/>
+        <location filename="mainwindow.cpp" line="846"/>
         <source>tr_message_confirmclose_text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="917"/>
-        <location filename="mainwindow.cpp" line="1008"/>
+        <location filename="mainwindow.cpp" line="929"/>
+        <location filename="mainwindow.cpp" line="1020"/>
         <source>tr_filedialog_title</source>
         <translation type="unfinished">Select File</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="932"/>
+        <location filename="mainwindow.cpp" line="944"/>
         <source>tr_warning_nofile_title</source>
         <oldsource>tr_warning_fileexists_title</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="933"/>
+        <location filename="mainwindow.cpp" line="945"/>
         <source>tr_warning_nofile_text</source>
         <oldsource>tr_warning_fileexists_text</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="939"/>
+        <location filename="mainwindow.cpp" line="951"/>
         <source>tr_warning_bigsizefile_text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="940"/>
+        <location filename="mainwindow.cpp" line="952"/>
         <source>tr_warning_bigsizefile_informative</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="948"/>
+        <location filename="mainwindow.cpp" line="960"/>
         <source>tr_error_bigsizefile_text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="949"/>
+        <location filename="mainwindow.cpp" line="961"/>
         <source>tr_error_bigsizefile_informative</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="962"/>
+        <location filename="mainwindow.cpp" line="974"/>
         <source>tr_warning_fileloadfailed_title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="963"/>
+        <location filename="mainwindow.cpp" line="975"/>
         <source>tr_warning_fileloadfailed_text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1157"/>
+        <location filename="mainwindow.cpp" line="1180"/>
         <source>tr_message_filemodified_text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1158"/>
+        <location filename="mainwindow.cpp" line="1181"/>
         <source>tr_message_filemodified_informative</source>
         <translation type="unfinished"></translation>
     </message>

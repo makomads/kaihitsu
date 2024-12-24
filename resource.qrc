@@ -1,2 +1,17 @@
-<!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC>
+    <qresource prefix="/">
+        <file>icons/document-new.png</file>
+        <file>icons/document-open.png</file>
+        <file>icons/document-save.png</file>
+        <file>icons/edit-copy.png</file>
+        <file>icons/edit-cut.png</file>
+        <file>icons/edit-paste.png</file>
+        <file>icons/edit-redo.png</file>
+        <file>icons/edit-undo.png</file>
+        <file>icons/icon1.png</file>
+        <file>icons/icon1.psd</file>
+        <file>icons/icon_r1.ico</file>
+        <file>icons/icon_r1.png</file>
+        <file>icons/vector-icon-open-notepad-pencil-450w-108855422.jpg</file>
+    </qresource>
+</RCC>

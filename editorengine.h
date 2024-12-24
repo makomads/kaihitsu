@@ -230,7 +230,7 @@ public:
 
 protected:
     std::wstring debugstr;
-    static char charwidths[65536];
+
 
     //段落とカーソル
     Paragraph *rootprg; //ルート段落

@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
             if(QIcon::hasThemeIcon(iconnames[i]))
                 icon = QIcon::fromTheme(iconnames[i]);
             else
-                icon = QIcon(QString(":/icons/%1").arg(iconnames[i]));
+                icon = QIcon(QString(":/resources/icons/%1").arg(iconnames[i]));
             actions[i]->setIcon(icon);
             ui->mainToolBar->addAction(actions[i]);
         }
@@ -269,11 +269,7 @@ void MainWindow::firstShowEvent()
 {
 #ifdef QT_DEBUG
     debugout->show();
-#ifdef _WIN32
-    openFile("z:/debug.txt");
-#else
-    openFile("/public/psv/debug.txt");
-#endif
+    openFile(":/resources/debug.txt");
 #endif
 
     //コマンドライン引数

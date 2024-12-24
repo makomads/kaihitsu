@@ -1,17 +1,18 @@
 <RCC>
     <qresource prefix="/">
-        <file>icons/document-new.png</file>
-        <file>icons/document-open.png</file>
-        <file>icons/document-save.png</file>
-        <file>icons/edit-copy.png</file>
-        <file>icons/edit-cut.png</file>
-        <file>icons/edit-paste.png</file>
-        <file>icons/edit-redo.png</file>
-        <file>icons/edit-undo.png</file>
-        <file>icons/icon1.png</file>
-        <file>icons/icon1.psd</file>
-        <file>icons/icon_r1.ico</file>
-        <file>icons/icon_r1.png</file>
-        <file>icons/vector-icon-open-notepad-pencil-450w-108855422.jpg</file>
+        <file>resources/icons/document-new.png</file>
+        <file>resources/icons/document-open.png</file>
+        <file>resources/icons/document-save.png</file>
+        <file>resources/icons/edit-copy.png</file>
+        <file>resources/icons/edit-cut.png</file>
+        <file>resources/icons/edit-paste.png</file>
+        <file>resources/icons/edit-redo.png</file>
+        <file>resources/icons/edit-undo.png</file>
+        <file>resources/icons/icon1.png</file>
+        <file>resources/icons/icon1.psd</file>
+        <file>resources/icons/icon_r1.ico</file>
+        <file>resources/icons/icon_r1.png</file>
+        <file>resources/icons/vector-icon-open-notepad-pencil-450w-108855422.jpg</file>
+        <file>resources/debug.txt</file>
     </qresource>
 </RCC>

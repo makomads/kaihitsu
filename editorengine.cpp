@@ -3,6 +3,7 @@
 //#include <string.h>
 //#include <ctype.h>
 #include <iostream>
+#include <cstring>
 #include <cwctype>
 #include <list>
 #include <vector>
@@ -10,7 +11,7 @@
 
 #include "editorengine.h"
 
-static char charwidths[65536];
+static signed char charwidths[65536];
 
 //接続されたコールバック関数とおまけポインタ
 static void* cb_slide=NULL;		//void cbfunc(int dist, void* dat)
@@ -57,7 +58,7 @@ EditorAttribute *EditorEngine::FindAttribute(int id)
 void EditorEngine::SetWidthsTable(char *table)  //static
 {
     memcpy(::charwidths, table, 64*1024);
-    ::charwidths[(int)'\n']=0;
+    ::charwidths['\n']=0;
 }
 
 bool EditorEngine::IsValidRegexp(const std::wstring re)    //static

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <QApplication>
+#include <QFile>
 #include <QKeyEvent>
 #include <QPainter>
 #include <QInputMethodEvent>
@@ -27,16 +28,18 @@ void SlideCB(int dist, void* dat);
 PixmapItem::PixmapItem()
     :QLayoutItem()
 {
-    pm = new QPixmap(16,16);
+    pm = new QPixmap(10,10);
 }
+
 
 void PixmapItem::setGeometry(const QRect &rc)
 {
     rect = rc;
-    if(rect.width()>pm->width() || rect.height()>pm->height()){
+    auto pixelratio = qApp->devicePixelRatio();
+    //if(rect.width()*pixelratio>pm->width() || rect.height()*pixelratio>pm->height()){
         delete pm;
-        pm = new QPixmap(rect.width()*1.25, rect.height()*1.25);
-    }
+        pm = new QPixmap(rect.width()*pixelratio+0.999, rect.height()*pixelratio+0.999);
+    //}
 }
 
 EditorView::EditorView(QWidget *parent)
@@ -44,6 +47,7 @@ EditorView::EditorView(QWidget *parent)
 {
     model = NULL;
     setAcceptDrops(true);
+    pixelratio = qApp->devicePixelRatio();
 
     //レイアウト
     lo = new QGridLayout(this);
@@ -66,8 +70,8 @@ EditorView::EditorView(QWidget *parent)
     setAutoFillBackground(false);  //Qtのscrollによるブランク領域再描画を無効
     setAttribute(Qt::WA_OpaquePaintEvent , true);
     //setAttribute(Qt::WA_PaintOnScreen, true);		//Qtによるダブルバッファリング無効
-    setAttribute(Qt::WA_InputMethodEnabled, true);
-	//setAttribute( Qt::WA_KeyCompression );
+    setAttribute(Qt::WA_InputMethodEnabled);
+    //setAttribute( Qt::WA_KeyCompression );
 
     //その他の変数
     compo = new Composition(this);
@@ -94,13 +98,15 @@ void EditorView::setScrollBars(QScrollBar *v, QScrollBar *h)
 
 
 
-void EditorView::setFont(int fontsize, int lineheight, QString fontfamily, QString charwidthpath)
+void EditorView::setFont(int fontsize, int lineheight, QString fontfamily, QString fontstyle, QString charwidthpath)
 {
     this->fontsize = fontsize;
     this->lineheight = lineheight;
 
     textfont = QFont(fontfamily);
     textfont.setPixelSize(fontsize);
+    if(fontstyle != "")
+        textfont.setStyleName(fontstyle);
 
     linenofont = QFont(fontfamily);
     linenofont.setPixelSize(fontsize);
@@ -119,7 +125,7 @@ void EditorView::setFont(int fontsize, int lineheight, QString fontfamily, QStri
         memset(cwtable, 0, sizeof(cwtable));
         for(int i=0; i<65536; i++){
             //if(fontmet->inFont((QChar)i))
-                cwtable[i] = fontmet->width((QChar)i);
+            cwtable[i] = fontmet->horizontalAdvance((QChar)i);
         }
         if(cwfile.open(QIODevice::WriteOnly)){
             cwfile.write(cwtable, sizeof(cwtable));
@@ -128,9 +134,7 @@ void EditorView::setFont(int fontsize, int lineheight, QString fontfamily, QStri
 
     EditorEngine::SetWidthsTable(cwtable);
 
-    compo->setFont(textfont, fontmet);
-
-
+    compo->setFont(fontfamily, fontsize/pixelratio);
 }
 
 
@@ -170,7 +174,8 @@ void EditorView::createBackBuffer()
     }
     hseploi->resize(width(), margin);
     if(showlineno){
-        linenoloi->resize(fontsize/2*5, linenoloi->height());
+        //fontsizeの単位はピクセルなのでdipに直す
+        linenoloi->resize((fontsize/2*5)/pixelratio, linenoloi->height());
     }
     else{
         linenoloi->resize(0,linenoloi->height());
@@ -183,22 +188,28 @@ void EditorView::createBackBuffer()
     //モデル
     if(model){
         //固定描画部
-        EditorAttribute *attr = model->FindAttribute(ATTR_LINENO);
+        EditorAttribute *attr;
         QPainter p;
         QRect rc;
+
+        attr = model->FindAttribute(ATTR_RULER);
         p.begin(hseploi->pixmap());
-        p.fillRect(QRect(0,0,linenoloi->width(),hseploi->height()),
-                   QColor(attr->br,attr->bg,attr->bb));
-
-        attr = model->FindAttribute(ATTR_BACKGROUND);
-        rc = QRect(linenoloi->width(),0,hseploi->width()-linenoloi->width(),hseploi->height());
-        p.fillRect(rc, QColor(attr->r,attr->g,attr->b));
+        rc = QRect(0,0,hseploi->pixmap()->width(),hseploi->pixmap()->height());
+        p.fillRect(rc, QColor(attr->br,attr->bg,attr->bb));
         p.end();
 
+        attr = model->FindAttribute(ATTR_LINENO);
         p.begin(vseploi->pixmap());
-        rc = QRect(0,0,vseploi->width(),vseploi->height());
+        rc = QRect(0,0,vseploi->pixmap()->width(),vseploi->pixmap()->height());
+        p.fillRect(rc, QColor(attr->br,attr->bg,attr->bb));
+        p.end();
+
+        p.begin(textloi->pixmap());
+        attr = model->FindAttribute(ATTR_BACKGROUND);
+        rc = QRect(0,0,textloi->pixmap()->width(),textloi->pixmap()->height());
         p.fillRect(rc, QColor(attr->r,attr->g,attr->b));
         p.end();
+
 
         paintRuler(hscrollbar->value());
 
@@ -206,10 +217,10 @@ void EditorView::createBackBuffer()
         int wrapwidth;
         FileTypeConfig *ftconf = model->getFileTypeConfig();
         wrapwidth = ftconf->autowrap?
-                    textloi->width():
+                    textloi->pixmap()->width():
                     ftconf->wrapsize * fontsize;
         model->SetViewParams((int)((float)fontsize/2*ftconf->tabsize),
-                             wrapwidth, textloi->height(), lineheight);
+                             wrapwidth, textloi->pixmap()->height(), lineheight);
         repaintBackBuffer();
     }
 
@@ -222,28 +233,29 @@ void EditorView::paintRuler(int value)
         return;
 
     EditorAttribute *pattr;
-    int orgpoint=textloi->x() - value*(float)fontsize/2;
+    int orgpoint=(textloi->x() - value*(float)fontsize/2) * pixelratio; //dip to pixel
     int col, x;
-    QPainter p(rulerloi->pixmap());
+    QPixmap *pm = rulerloi->pixmap();
+    QPainter p(pm);
     QFont rulerfont(linenofont.family());
     pattr = model->FindAttribute(ATTR_RULER);
-    p.fillRect(rulerloi->geometry(), QColor(pattr->br,pattr->bg,pattr->bb));
+    p.fillRect(pm->rect(), QColor(pattr->br,pattr->bg,pattr->bb));
 
-    rulerfont.setPixelSize(linenofont.pixelSize()-2);
+    rulerfont.setPixelSize(linenofont.pixelSize());
 
     p.setPen(QColor(pattr->r,pattr->g,pattr->b));
-    p.drawLine(orgpoint, rulerloi->height()-3, rulerloi->width(), rulerloi->height()-3);
-    for(col=0,x=0; x<rulerloi->width(); col++){
+    p.drawLine(orgpoint, pm->height()-3, pm->width(), pm->height()-3);
+    for(col=0,x=0; x<pm->width(); col++){
         x = orgpoint + int(col * (float)fontsize/2);
         if(col%10==0){
-            p.drawLine(x, 3, x, rulerloi->height()-3);
+            p.drawLine(x, 3, x, pm->height()-3);
 
-            QRect textrc(x+1, 0, fontsize, rulerloi->height());
+            QRect textrc(x+1, 0, fontsize, pm->height());
             p.drawText(textrc, Qt::AlignVCenter | Qt::AlignLeft,
                        QString("%1").arg((int)(col/10)));
         }
         else{
-            p.drawLine(x, rulerloi->height()-6, x, rulerloi->height()-3);
+            p.drawLine(x, pm->height()-6, x, pm->height()-3);
         }
     }
 
@@ -282,6 +294,10 @@ void EditorView::attach(Model *mdl)
     ftconf = model->getFileTypeConfig();
     hscrollbar->setVisible(!ftconf->autowrap);
     createBackBuffer();
+
+    EditorAttribute *attr = model->FindAttribute(ATTR_BACKGROUND);
+    auto bgcolor = QColor(attr->br, attr->bg, attr->bb);
+    compo->setBackground(bgcolor);
 /*
     //スクロールバー
     if(model->GetScrollPos() > vscrollbar->maximum()){
@@ -306,6 +322,7 @@ void EditorView::resizeEvent( QResizeEvent *e )
 {
     createBackBuffer();
 
+    debugout->append(QString("RESIZE view(%1,%2), pm(%3,%4)").arg(textloi->width()).arg(textloi->height()).arg(textloi->pixmap()->width()).arg(textloi->pixmap()->height()));
 }
 
 
@@ -414,6 +431,8 @@ QVariant EditorView::inputMethodQuery ( Qt::InputMethodQuery query ) const
         return QRect(compo->candidatePosition(), QSize(fontsize,lineheight));
     case Qt::ImFont:
         return textfont;
+    case Qt::ImEnabled:
+        return QWidget::inputMethodQuery(query);
 /*
  * これらは再変換に使うのみなので再変換をサポートするまでは使わない
     case Qt::ImCursorPosition:
@@ -424,10 +443,10 @@ QVariant EditorView::inputMethodQuery ( Qt::InputMethodQuery query ) const
         return tr("いろは");
 */
     default:
-        return QVariant();
+        return QWidget::inputMethodQuery(query);
     }
 
-    return QVariant();
+    return QWidget::inputMethodQuery(query);
 }
 
 
@@ -452,33 +471,39 @@ void EditorView::inputMethodEvent(QInputMethodEvent *e)
 
 QPoint EditorView::toEditorPos(const QPoint &pt)
 {
-    QPoint ret;
+    //ウィジェットのDIP座標からテキスト領域のピクセル座標に変換する
+    int x, y;
     if(!hscrollbar->isHidden())
-        ret.setX(pt.x() - textloi->x() + hscrollbar->value()*fontsize/2);
+        x = pt.x() - textloi->x() + hscrollbar->value()*fontsize/2;
     else
-        ret.setX(pt.x() - textloi->x());
-    ret.setY(pt.y() - textloi->y());
+        x = pt.x() - textloi->x();
+    y = pt.y() - textloi->y();
 
-    return ret;
+    return QPoint(x * pixelratio, y * pixelratio);
 }
 
+unsigned long EditorView::mouseEventToState(QMouseEvent *e)
+{
+    //Qtのマウスイベントからエディタエンジンのイベントに変換
+    unsigned long state=0;
+    if(e->buttons()&Qt::LeftButton)  state |= BUTTON_LEFT;
+    if(e->modifiers()&Qt::ShiftModifier) state |= MODKEY_SHIFT;
+    return state;
+}
 
 
 void EditorView::mouseMoveEvent( QMouseEvent *e )
 {
-    model->MouseEvent(MOUSE_MOVE, 0,e->x()-textloi->x(), e->y()-textloi->y(), mouseEventToState(e));
+    QPoint pt = toEditorPos(e->pos());
+    model->MouseEvent(MOUSE_MOVE, 0, pt.x(), pt.y(), mouseEventToState(e));
 }
-
-
 
 void EditorView::mousePressEvent( QMouseEvent *e )
 {
     QPoint pt = toEditorPos(e->pos());
-    unsigned long state = mouseEventToState(e);
 	switch(e->button()){
     case Qt::LeftButton:
-        //model->MouseEvent(BUTTON_LEFT, 1, e->x()-textloi->x(), e->y()-textloi->y(), state);
-        model->MouseEvent(BUTTON_LEFT, 1, pt.x(), pt.y(), state);
+        model->MouseEvent(BUTTON_LEFT, 1, pt.x(), pt.y(), mouseEventToState(e));
 		break;
     case Qt::RightButton:
         emit mouseRightButtonPressed(e);
@@ -490,11 +515,10 @@ void EditorView::mousePressEvent( QMouseEvent *e )
 
 void EditorView::mouseDoubleClickEvent( QMouseEvent *e )
 {
-	unsigned long state = mouseEventToState(e);
-
+    QPoint pt = toEditorPos(e->pos());
 	switch(e->button()){
-	case Qt::LeftButton:
-        model->MouseEvent(BUTTON_LEFT, 2, e->x()-textloi->x(), e->y()-textloi->y(), state);
+    case Qt::LeftButton:
+        model->MouseEvent(BUTTON_LEFT, 2, pt.x(), pt.y(), mouseEventToState(e));
 		break;
     default:
         break;
@@ -503,11 +527,10 @@ void EditorView::mouseDoubleClickEvent( QMouseEvent *e )
 
 void EditorView::mouseReleaseEvent( QMouseEvent *e )
 {
-	unsigned long state = mouseEventToState(e);
-
+    QPoint pt = toEditorPos(e->pos());
 	switch(e->button()){
     case Qt::LeftButton:
-        model->MouseEvent(BUTTON_LEFT, 0, e->x()-textloi->x(), e->y()-textloi->y(), state);
+        model->MouseEvent(BUTTON_LEFT, 0, pt.x(), pt.y(), mouseEventToState(e));
 		break;
     default:
         break;
@@ -515,30 +538,21 @@ void EditorView::mouseReleaseEvent( QMouseEvent *e )
 }
 
 
-
 void EditorView::wheelEvent(QWheelEvent *e)
 {
-    int relx = e->x()-textloi->x();
-    int rely = e->y()-textloi->y();
-	unsigned long state=0;
-
+    int px = (e->position().x() - textloi->x()) * pixelratio;
+    int py = (e->position().y() - textloi->y()) * pixelratio;
+    unsigned long state=0;
     if(e->buttons()&Qt::LeftButton)  state |= BUTTON_LEFT;
-	if(e->modifiers()&Qt::ShiftModifier) state |= MODKEY_SHIFT;
+    if(e->modifiers()&Qt::ShiftModifier) state |= MODKEY_SHIFT;
 
-	if(e->delta()>0) 
-		model->MouseEvent(BUTTON_WHEELUP, 1, relx,rely, state);
-	else 
-		model->MouseEvent(BUTTON_WHEELDOWN, 1, relx,rely, state);
+    if(e->angleDelta().y()>0)
+        model->MouseEvent(BUTTON_WHEELUP, 1, px, py, state);
+    else
+        model->MouseEvent(BUTTON_WHEELDOWN, 1, px, py, state);
 }
 
 
-unsigned long EditorView::mouseEventToState(QMouseEvent *e)
-{
-	unsigned long state=0;
-	if(e->buttons()&Qt::LeftButton)  state |= BUTTON_LEFT;
-	if(e->modifiers()&Qt::ShiftModifier) state |= MODKEY_SHIFT;
-	return state;
-}
 
 
 void EditorView::scrollVertically(int value)
@@ -560,10 +574,11 @@ void SlideCB(int dist, void* dat)
 void EditorView::slide(int dist)
 {
     int dy = dist*lineheight;
-    textloi->pixmap()->scroll(0, dy, QRect(0,0,textloi->width(),textloi->height()));
-    linenoloi->pixmap()->scroll(0, dy, QRect(0,0,linenoloi->width(),linenoloi->height()));
-    repaint(textloi->geometry());
-    repaint(linenoloi->geometry());
+    textloi->pixmap()->scroll(0, dy, QRect(0,0,textloi->pixmap()->width(),textloi->pixmap()->height()));
+    linenoloi->pixmap()->scroll(0, dy, QRect(0,0,linenoloi->pixmap()->width(),linenoloi->pixmap()->height()));
+    //repaint(textloi->geometry());
+    //repaint(linenoloi->geometry());
+    repaint();
 }
 
 void EditorView::repaintBackBuffer()
@@ -584,6 +599,7 @@ void EditorView::repaintCB(int start, int end)
     Character* chara;
     int px,py;
     EditorAttribute *pattr;
+    int fontbaseheight = (int)(lineheight * (float)fontmet->ascent() / (fontmet->ascent() + fontmet->descent()) + 0.5);
 
     /******** テキスト領域 ********/
     p.begin(textloi->pixmap());
@@ -592,12 +608,12 @@ void EditorView::repaintCB(int start, int end)
     p.fillRect(
             0,
             start*lineheight,
-            textloi->width(),
+            textloi->pixmap()->width(),
             (end-start+1)*lineheight,
             QColor(pattr->r,pattr->g,pattr->b) );
 
     //初期化
-    textfont.setBold(false);
+    //textfont.setBold(false);
     p.setFont(textfont);
     p.setPen(QColor(0,0,0));
 
@@ -610,15 +626,14 @@ void EditorView::repaintCB(int start, int end)
 
     //描画
     while(chara->line<=end){
-        textfont.setBold(chara->bold);
+        //textfont.setBold(chara->bold);
         p.setFont(textfont);
         px = chara->x - hscrollbar->value()*(float)fontsize/2;
-        py = (chara->line+1)*lineheight;
+        py = chara->line * lineheight;
         if(chara->ch==ETX){
-            p.fillRect(px, py-lineheight, fontmet->width('E'), lineheight,
-                    QColor(Qt::lightGray) );
+            p.fillRect(px, py, fontmet->horizontalAdvance('E'), lineheight, QColor(Qt::lightGray) );
             p.setPen(QColor(Qt::white));
-            p.drawText(px, py-2, QString(QChar('E')));
+            p.drawText(px, py+fontbaseheight, QString(QChar('E')));
             break;
         }
         else if(chara->ch=='\n'){
@@ -628,12 +643,11 @@ void EditorView::repaintCB(int start, int end)
         else{
             //背景が透明色以外のときは背景を塗る
             if(chara->br!=TRANSPARENT_COLOR){
-                p.fillRect(px, py-lineheight, chara->w, lineheight,
-                    QColor(chara->br,chara->bg,chara->bb) );
+                p.fillRect(px, py, chara->w, lineheight, QColor(chara->br,chara->bg,chara->bb) );
             }
             //文字描画、アンダーラインを考慮して少し上にあげる
             p.setPen(QColor(chara->r,chara->g,chara->b));
-            p.drawText(px, py-2, QString(QChar(chara->ch)));
+            p.drawText(px, py+fontbaseheight, QString(QChar(chara->ch)));
         }
         chara = model->ProceedScan();
     }
@@ -653,7 +667,7 @@ void EditorView::repaintCB(int start, int end)
         p.fillRect(
             0,
             start*lineheight,
-            linenoloi->width(),
+            linenoloi->pixmap()->width(),
             (end-start+1)*lineheight,
             QColor(pattr->br,pattr->bg,pattr->bb) );
 
@@ -662,13 +676,14 @@ void EditorView::repaintCB(int start, int end)
             if(lineno[i]==-1) continue;
             sprintf(strlineno,"%d", lineno[i]+1);	//0行ではなく1行から始める
             col=4-log10((double)(lineno[i]+2));	//右詰めにする
-            p.drawText(col*fontsize/2, (i+1)*lineheight-2, strlineno);
+            p.drawText(col*fontsize/2, i*lineheight+fontbaseheight, strlineno);
         }
         p.end();
     }
 
     //実画面へ転送
-    repaint(0, textloi->y()+start*lineheight, width(), (end-start+1)*lineheight);
+    //repaint(0, textloi->y()+start*lineheight, width(), (end-start+1)*lineheight);
+    repaint();
 
     //スクロールバーはこのタイミングで更新する
     int nscreenlines = qRound((double)textloi->height()/lineheight);
@@ -686,9 +701,9 @@ void EditorView::repaintCB(int start, int end)
     //IM表示位置
     int curx, cury;
     model->GetCursor(&curx, &cury);
-    curx += textloi->x();
-    cury = cury*lineheight + textloi->y();
-    compo->setMicroFocusHint(textloi->geometry(), QPoint(curx, cury), lineheight);
+    curx = curx/pixelratio + textloi->x();
+    cury = (cury*lineheight)/pixelratio + textloi->y();
+    compo->setMicroFocusHint(textloi->geometry(), QPoint(curx, cury), lineheight/pixelratio);
 
     ///////////////////////////////////////////////
     //デバッグ用
@@ -752,6 +767,8 @@ void EditorView::repaintCB(int start, int end)
         debugstr.append("\n");
     }
 
+    debugstr.append(QString("fontmet asc%1 dsc%2").arg(fontbaseheight).arg(fontmet->descent()));
+
     debugout->clear();
     debugout->insertPlainText(debugstr);
 #endif
@@ -774,25 +791,35 @@ void EditorView::paintEvent( QPaintEvent *e )
     PixmapItem *pis[] = {rulerloi, linenoloi, textloi, hseploi, vseploi, NULL};
     for(int i=0; pis[i]!=NULL; i++){
         PixmapItem *pi = pis[i];
+
+        p.drawPixmap(pi->geometry(), *pi->pixmap(), pi->pixmap()->rect());
+
+        /*
         if(!e->rect().intersects(pi->geometry())) continue;
 
         QRect isec = e->rect().intersected(pi->geometry());
         p.drawPixmap(isec.topLeft(), *pi->pixmap(),
                      QRect(isec.x()-pi->x(), isec.y()-pi->y(),
                            isec.width(), isec.height()) );
+*/
     }
 
     //カーソル
 	int curx,cury;
 	model->GetCursor(&curx, &cury);
-    curx += textloi->x()-hscrollbar->value()*fontsize/2;
-    cury = cury*lineheight+textloi->y();
+    curx /= pixelratio;
+    curx += textloi->x() - hscrollbar->value()*fontsize/2;
+    cury = (int)((cury*lineheight)/pixelratio + textloi->y() + 0.999);
     if(curx>=textloi->x() && cury >=textloi->y())
-       p.drawLine(curx, cury, curx, cury+lineheight-1);
+       p.drawLine(curx, cury, curx, cury+lineheight/pixelratio);
 
     //IM
     compo->draw(&p);
 
+}
+
+void EditorView::focusInEvent(QFocusEvent* e)
+{
 }
 
 

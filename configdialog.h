@@ -31,6 +31,7 @@ struct ConfigData
     int fontsize;
     int lineheight;
     QString fontfamily;
+    QString fontstyle;
     int warningfilesizemb;
     int maxfilesizemb;
     int scrollsize;
@@ -75,6 +76,8 @@ private slots:
     void on_btndelattr_clicked();
     void on_btnmoveupattr_clicked();
     void on_btnmovedownattr_clicked();
+
+    void on_cmb_fontfamily_currentIndexChanged(int index);
 
 private:
     Ui::ConfigDialog *ui;

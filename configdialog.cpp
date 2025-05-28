@@ -1,5 +1,4 @@
 ﻿#include <QApplication>
-#include <QDesktopWidget>
 #include <QFontDatabase>
 #include <QMessageBox>
 #include "configdialog.h"
@@ -11,6 +10,7 @@ ConfigDialog::ConfigDialog(QWidget *parent) :
     ui(new Ui::ConfigDialog)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_InputMethodEnabled);
 }
 
 ConfigDialog::~ConfigDialog()
@@ -25,11 +25,13 @@ int ConfigDialog::exec(const ConfigData &configdata)
     ui->btnapply->hide();
 
     //共通タブ
-    QFontDatabase fontdb;
-    for(int i=0; i<fontdb.families().count(); i++){
-        ui->cmb_fontfamily->insertItem(i, fontdb.families()[i] );
-        if( fontdb.families()[i] == data.fontfamily )
+    QStringList families = QFontDatabase::families();
+    for(int i=0; i<families.count(); i++){
+        ui->cmb_fontfamily->insertItem(i, families[i] );
+        if( families[i] == data.fontfamily ){
             ui->cmb_fontfamily->setCurrentIndex(i);
+            ui->cmb_fontstyle->setCurrentText(data.fontfamily);
+        }
     }
     ui->edt_fontsize->setText(tr("%1").arg(data.fontsize));
     ui->edt_lineheight->setText(tr("%1").arg(data.lineheight));
@@ -81,6 +83,7 @@ void ConfigDialog::on_btnapply_clicked()
 
     //共通タブ
     data.fontfamily = ui->cmb_fontfamily->currentText();
+    data.fontstyle = ui->cmb_fontstyle->currentText();
     data.fontsize = ui->edt_fontsize->text().toInt(&ok);
     if(!ok) data.fontsize = 14;
     data.lineheight = ui->edt_lineheight->text().toInt(&ok);
@@ -366,12 +369,12 @@ void ConfigDialog::on_lstattributes_itemChanged(QTableWidgetItem *item)
         //setText()はsetItem()と違いシグナルを出さないのでループにはならない
         item->setText(tr("%1,%2,%3").arg(r).arg(g).arg(b));
         if(r==TRANSPARENT_COLOR){
-            item->setBackgroundColor(QColor("white"));
-            item->setTextColor(QColor("black"));
+            item->setBackground(QColor("white"));
+            item->setForeground(QColor("black"));
         }else{
-            item->setBackgroundColor(QColor(r,g,b));
+            item->setBackground(QColor(r,g,b));
             if(r+g+b < (256*3)/2)
-                item->setTextColor(QColor("white"));
+                item->setForeground(QColor("white"));
         }
     }
 
@@ -507,4 +510,15 @@ void ConfigDialog::swapQTableWidgetRows(int row1, int row2)
 }
 
 
+
+
+void ConfigDialog::on_cmb_fontfamily_currentIndexChanged(int index)
+{
+    auto family = ui->cmb_fontfamily->itemText(index);
+    ui->cmb_fontstyle->clear();
+    QStringList styles = QFontDatabase::styles(family);
+    for(int j=0; j<styles.count(); j++){
+        ui->cmb_fontstyle->insertItem(j, styles[j]);
+    }
+}
 

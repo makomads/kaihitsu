@@ -1,10 +1,10 @@
 ﻿#include <stdio.h>
 #include <QByteArray>
-#include <QTextCodec>
+//#include <QTextCodec>
 #include <QFile>
 #include <QFileInfo>
 #include "model.h"
-
+#include "ictextcodec.h"
 
 
 
@@ -22,7 +22,7 @@ int Model::load(QString codecname, QString lineend)
 {
     QFile file(filepath);
     QByteArray data;
-    QTextCodec *codec;
+    IcTextCodec* codec;
     QString textdata;
 
     Clear();
@@ -34,11 +34,8 @@ int Model::load(QString codecname, QString lineend)
 
     //コーデック
     if(codecname==AUTOSIGNATURE)
-        codec = Model::chooseBestCodec(&data, 1000);
-    else
-        codec = QTextCodec::codecForName(codecname.toLatin1());
-    if(!codec)
-        codec = QTextCodec::codecForLocale();
+        codecname = IcTextCodec::detectEncoding(data, 1000);
+    codec = IcTextCodec::codecForName(codecname.toLatin1());
     filecodecname = codec->name();
     textdata = codec->toUnicode(data);
 
@@ -72,7 +69,7 @@ int Model::save(QString codecname, QString lineend)
     int bufsize = 1000;
     wchar_t buf[1000];
     QString text;
-    QTextCodec *codec;
+    IcTextCodec* codec;
     QByteArray data;
     QFile file(filepath);
 
@@ -85,7 +82,7 @@ int Model::save(QString codecname, QString lineend)
     //文字コード準備
     if(codecname != AUTOSIGNATURE)
         filecodecname= codecname;
-    codec = QTextCodec::codecForName(filecodecname.toLatin1());
+    codec = IcTextCodec::codecForName(filecodecname.toLatin1());
 
     //書き込み
     ResetOutputStream();
@@ -148,60 +145,6 @@ void Model::applyConfig(ConfigData *configdata)
     InsertFast(text.toStdWString());
     AllowDrawing(true);
 }
-
-
-QTextCodec *Model::chooseBestCodec(QByteArray *text, int hdsize)    //static
-{
-    QTextCodec *codec;
-    QTextCodec *candidate;
-    int cand_invalidchars=99999;
-    QList<QByteArray> avcodecs = QTextCodec::availableCodecs();
-    QList<QByteArray>::Iterator it;
-    QList<QByteArray> codecnames;
-
-    if(text->size()<hdsize)
-        hdsize = text->size();
-
-    //優先コーデックを先に調べる
-    codecnames.append("UTF-8");
-    codecnames.append("Shift-JIS");
-    codecnames.append("EUC-JP");
-    codecnames.append("ISO 2022-JP");
-    codecnames.append("ISO 8859-1");
-    for(it=codecnames.begin(); it!=codecnames.end(); it++){
-        QTextCodec::ConverterState state;
-        codec = QTextCodec::codecForName(*it);
-        if(!codec) continue;
-        codec->toUnicode(text->constData(), hdsize, &state);
-        if(state.invalidChars < cand_invalidchars){
-            candidate = codec;
-            cand_invalidchars = state.invalidChars;
-        }
-        if(cand_invalidchars==0)
-            break;
-    }
-    if(cand_invalidchars<4)
-        return candidate;
-
-    //優先コーデックに見つからなければすべてのコーデックで調べる
-    codecnames = QTextCodec::availableCodecs();
-    cand_invalidchars=99999;
-    for(it=avcodecs.begin(); it!=avcodecs.end(); it++){
-        QTextCodec::ConverterState state;
-        codec = QTextCodec::codecForName(*it);
-        codec->toUnicode(text->constData(), hdsize, &state);
-        if(state.invalidChars < cand_invalidchars){
-            candidate = codec;
-            cand_invalidchars = state.invalidChars;
-        }
-    }
-    if(cand_invalidchars<4)
-        return candidate;
-
-    return NULL;
-}
-
-
 
 
 QString Model::escape(const QString &str) //static

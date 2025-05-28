@@ -5,7 +5,7 @@
 #include <QAction>
 #include <QDir>
 #include <QFileDialog>
-#include <QTextCodec>
+//#include <QTextCodec>
 #include <QMessageBox>
 #include <QWheelEvent>
 #include <QStringList>
@@ -55,7 +55,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->tabbar->setExpanding(false);    //これをやらないとtabSizeHintがきかない
     //ui->tabbar->setStyleSheet("QTabBar::tab {min-width: 80px;}");
-
 
     //ツールバーとアイコン
     //OSがアイコンテーマを提供しているときはそれを使う
@@ -126,8 +125,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //設定読み込み
     QSettings settings(settingspath, QSettings::IniFormat);
-    settings.setIniCodec(QTextCodec::codecForName("UTF-8"));
-
+    //settings.setIniCodec(QTextCodec::codecForName("UTF-8")); //Qt6ではiniのコーデックはUTF-8のみになった
     settings.beginGroup("window");
     setGeometry( settings.value("geometry", QRect(100,100,400,400)).toRect() );
     dlgfind->savedgeom_find = settings.value("dlgfind.geometry.find", QRect(0,0,0,0)).toRect();
@@ -272,7 +270,8 @@ void MainWindow::firstShowEvent()
 {
 #ifdef QT_DEBUG
     debugout->show();
-    openFile(":/resources/debug.txt");
+    //openFile(":/resources/debug.txt");
+    openFile("d:/debug.txt");
 #endif
 
     //コマンドライン引数
@@ -550,7 +549,7 @@ void MainWindow::writeSettings()
 void MainWindow::applyConfig()
 {
     EditorEngine::SetDefaultAttributeSet(conf.filetypes[0].attrset);
-    editorview->setFont(conf.fontsize, conf.lineheight, conf.fontfamily, cwtablepath);
+    editorview->setFont(conf.fontsize, conf.lineheight, conf.fontfamily, conf.fontstyle, cwtablepath);
     filehistory.setMaximum(conf.maxrecent);
 
     //モデルにパラメータを反映させる
@@ -630,7 +629,7 @@ void MainWindow::onTriggerMenu(QAction *action)
             conf = dlg.configData();
 
             //フォントが変更されていたら幅キャッシュを更新する
-            if(conf.fontfamily != oldconf.fontfamily){
+            if(conf.fontfamily != oldconf.fontfamily || conf.fontsize != oldconf.fontsize){
                 QFile file(cwtablepath);
                 if(file.exists())
                     file.remove();
@@ -652,16 +651,16 @@ void MainWindow::onTriggerMenu(QAction *action)
             action == ui->actionTextencoding_output){
         ComboboxDialog dlg(this);
         dlg.createComboBoxes(2);
-        QList<QByteArray> codecs = QTextCodec::availableCodecs();
+        QList<QByteArray> codecnames = IcTextCodec::availableCodecs();
         QList<QByteArray>::Iterator it;
         QStringList actiondata = action->data().toStringList();
         dlg.setWindowTitle(tr("文字コード"));
         dlg.setListLabel(0, tr("文字コード:"));
         dlg.setListLabel(1, tr("改行:"));
         //文字コードのコンボボックス
-        qSort(codecs);
+        //qSort(codecnames);
         dlg.addListData(0,"tr_auto", AUTOSIGNATURE);
-        for(it=codecs.begin(); it!=codecs.end(); it++){
+        for(it=codecnames.begin(); it!=codecnames.end(); it++){
             dlg.addListData(0,*it,*it);
         }
         //改行コードのコンボボックス
@@ -750,6 +749,10 @@ void MainWindow::onTriggerMenu(QAction *action)
         VersionDialog dlg(this);
         dlg.setWindowTitle(tr("バージョン"));
         dlg.exec();
+
+        ui->debugedit->setFocus();
+        editorview->repaint();
+        editorview->setFocus();
     }
 }
 

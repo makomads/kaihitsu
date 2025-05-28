@@ -15,10 +15,18 @@ Composition::Composition(QWidget* w)
 }
 
 
-void Composition::setFont(QFont &f, QFontMetrics *metrics)
+void Composition::setFont(QString &fontfamily, int fontsizepx)
 {
-    font = f;
-    fontmet = metrics;
+    font = QFont(fontfamily);
+    font.setPixelSize(fontsizepx);
+    if(fontmet)
+        delete fontmet;
+    fontmet = new QFontMetrics(font);
+}
+
+void Composition::setBackground(QColor &color)
+{
+    compobgcolor = color;
 }
 
 void Composition::setMicroFocusHint(QRect rc, QPoint pt, int lh)
@@ -83,7 +91,7 @@ void Composition::inputMethodEvent(QInputMethodEvent *e)
 	x = curpos.x();
 	for(i=0; i<str.length(); i++){
 		c = str.at(i);
-        w = fontmet->width(c);
+        w = fontmet->horizontalAdvance(c);
 		x += w;
 		if(x > rect.right()){
 			lines.append(line);
@@ -120,6 +128,11 @@ void Composition::draw(QPainter *p)
 
     int i, j, n, x, y;
     QChar c;
+    int advance;
+    int fontbaseheight;
+
+    fontbaseheight = (int)(lineheight * (float)fontmet->ascent() / (fontmet->ascent() + fontmet->descent()) + 0.5);
+
     p->setFont(font);
 
 	for(i=0, n=0; i<lines.size(); i++){
@@ -127,16 +140,22 @@ void Composition::draw(QPainter *p)
 		else x = rect.x();
 		for(j=0; j<lines[i].length(); j++, n++){
 			c = lines[i].at(j);
+            advance = fontmet->horizontalAdvance(c);
 
 			//背景
 			y = curpos.y() + i*lineheight;
+            //コンポジションの背景
+            p->fillRect(x, y, advance, lineheight, QBrush(compobgcolor));
+            //文字背景
             if(formats[n].background().isOpaque())
-                p->fillRect(x, y, fontmet->width(c), lineheight, formats[n].background());
+                p->fillRect(x, y, advance, lineheight, formats[n].background());
             else
-                p->fillRect(x, y, fontmet->width(c), lineheight, QBrush(QColor("white")));
+                p->fillRect(x, y, advance, lineheight, QBrush(QColor("white")));
+            QBrush brush = formats[n].background();
+            p->fillRect(x, y, advance, lineheight, brush);
 
 			//文字
-			y = curpos.y() + (i+1)*lineheight-2;
+            y = curpos.y() + i*lineheight + fontbaseheight;
 			p->setPen(QPen(formats[n].foreground().color()));
             p->drawText(x, y, QString(c));
 
@@ -146,7 +165,7 @@ void Composition::draw(QPainter *p)
                 p->drawLine(x, y, x, y-lineheight);
             }
 			
-            x += fontmet->width(c);
+            x += advance;
 		}
 	}
 

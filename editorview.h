@@ -61,22 +61,23 @@ protected:
     Composition *compo;
 
     QGridLayout *lo;
-    PixmapItem *rulerloi;
+    PixmapItem *rulerloi;   //layout item
     PixmapItem *hseploi;
     PixmapItem *linenoloi;
     PixmapItem *vseploi;
     PixmapItem *textloi;
+    float pixelratio;
 
-	QScrollBar *vscrollbar, *hscrollbar;
+    QScrollBar *vscrollbar, *hscrollbar;
     QFont textfont, linenofont;
     QFontMetrics* fontmet;
-    int fontsize, lineheight;
+    int fontsize, lineheight, fontbaseheight;
     bool showlineno, showruler;
 
 public:
     EditorView(QWidget *parent);
     void setScrollBars(QScrollBar *v, QScrollBar *h);
-    void setFont(int fontsize, int lineheight, QString fontfamily, QString charwidthpath);
+    void setFont(int fontsize, int lineheight, QString fontfamily, QString fontstyle, QString charwidthpath);
     void attach(Model *model);
     void detatch();
     void showLineNumber(bool show);
@@ -98,11 +99,10 @@ protected:
 	void	mouseReleaseEvent( QMouseEvent * );
 	void	mouseDoubleClickEvent( QMouseEvent * );
 	void 	wheelEvent( QWheelEvent * );
-
 	void	keyPressEvent( QKeyEvent * );
 	void	resizeEvent( QResizeEvent * ); 
 	void	paintEvent( QPaintEvent * );
-
+    void    focusInEvent(QFocusEvent*) override;
 	bool	event ( QEvent * e );	//Tabを入力するためフィルタリングに使う
 
 	unsigned long mouseEventToState(QMouseEvent *e);

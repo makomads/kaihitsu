@@ -6,6 +6,8 @@ VersionDialog::VersionDialog(QWidget *parent) :
     ui(new Ui::VersionDialog)
 {
     ui->setupUi(this);
+
+    ui->lblversion->setText(VERSION_STRING);
 }
 
 VersionDialog::~VersionDialog()

@@ -1,7 +1,6 @@
 ﻿#include <QApplication>
 #include <QLocale>
 #include <QTranslator>
-#include <QTextCodec>
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QLocalServer>
@@ -175,18 +174,6 @@ bool Application::registerLocalServer()
 
 int Application::exec()
 {
-
-
-
-    //標準フォント
-    /*
-#ifndef WIN32
-    QFont f("MS UI Gothic");
-//	f.setPixelSize(12);
-    app.setFont(f);
-#endif
-*/
-
     //メインウィンドウ
     mainwindow = new MainWindow();
     mainwindow->show();

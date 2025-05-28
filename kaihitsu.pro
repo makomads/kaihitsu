@@ -18,6 +18,7 @@ SOURCES += \
     editorview.cpp \
     filehistory.cpp \
     finddialog.cpp \
+    ictextcodec.cpp \
     mainwindow.cpp \
     model.cpp \
     versiondialog.cpp
@@ -32,9 +33,9 @@ HEADERS += \
     editorview.h \
     filehistory.h \
     finddialog.h \
+    ictextcodec.h \
     mainwindow.h \
     model.h \
-    version.h \
     versiondialog.h
 
 FORMS += \

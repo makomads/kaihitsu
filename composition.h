@@ -21,18 +21,20 @@ class Composition
 	QWidget *owner;
 	QRect rect;
 	QPoint curpos;
-	int lineheight;
+    int lineheight;
 	QVector<QTextFormat> formats;
     QVector<QString> lines; //変換中に折り返しの場合もあるので複数行保持する
 	QString str;
     int compocurpos;
     QColor compocursorcolor;
+    QColor compobgcolor;
     QFontMetrics* fontmet;
     QFont font;
 
 public:
     Composition(QWidget *w);
-    void setFont(QFont &f, QFontMetrics *fontmet);
+    void setFont(QString &fontfamily, int fontsizepx);
+    void setBackground(QColor &color);
 	void setMicroFocusHint(QRect rc, QPoint pt, int lineheight);
     void setCursor(int pos, QColor color);
 	void inputMethodEvent(QInputMethodEvent *e);
@@ -40,6 +42,7 @@ public:
 	QRect boundingRect();
     QPoint candidatePosition();
 };
+
 
 
 

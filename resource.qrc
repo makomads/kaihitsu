@@ -14,5 +14,6 @@
         <file>resources/icons/icon_r1.png</file>
         <file>resources/icons/vector-icon-open-notepad-pencil-450w-108855422.jpg</file>
         <file>resources/debug.txt</file>
+        <file>resources/debug2.txt</file>
     </qresource>
 </RCC>

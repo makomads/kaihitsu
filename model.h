@@ -7,6 +7,7 @@
 #include <QVariant>
 #include <QObject>
 #include <QString>
+#include "ictextcodec.h"    //<QTextCodec>
 
 #define AUTOSIGNATURE "#AUTO"
 
@@ -38,8 +39,6 @@ public:
     void setLineEnd(QString le){filelineend=le;}
     QString textCodecName(){return filecodecname;}
     void setTextCodecName(QString name){filecodecname=name;}
-
-    static QTextCodec *chooseBestCodec(QByteArray *text, int hdsize);
 
     static QString escape(const QString& str);
     static QString unescape(const QString& str);

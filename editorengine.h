@@ -15,6 +15,7 @@
 テキストエディタのエンジン。
 グラフィック関係とキーボード、マウスなど入出力関係は抽象化されており、
 このクラス単体でエディタの機能が完結するようになっている。
+依存はboostのregexのみ。
 ******************************************************************************/
 
 enum{SCAN_ROOT, SCAN_SCREEN, SCAN_SELECTED};	//スキャンモード
@@ -23,8 +24,10 @@ enum{UU_NULL, UU_INS, UU_BS, UU_DEL, UU_REPLACE, UU_REPLACEEND };	//Undoの単�
 
 #define TRANSPARENT_COLOR -1
 
-
-//画面描画の際に上位クラスで表示させるキャラクタ
+/*
+    EditorModel::Nodeと本質的に同じだが、
+    これは対外的に使用する
+*/
 struct Character
 {
     wchar_t ch;

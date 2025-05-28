@@ -30,7 +30,7 @@ int ConfigDialog::exec(const ConfigData &configdata)
         ui->cmb_fontfamily->insertItem(i, families[i] );
         if( families[i] == data.fontfamily ){
             ui->cmb_fontfamily->setCurrentIndex(i);
-            ui->cmb_fontstyle->setCurrentText(data.fontfamily);
+            ui->cmb_fontstyle->setCurrentText(data.fontstyle);
         }
     }
     ui->edt_fontsize->setText(tr("%1").arg(data.fontsize));

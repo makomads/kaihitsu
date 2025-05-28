@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#define VERSION_STRING "171b1"
+#define VERSION_STRING "171"
 
 namespace Ui {
 class VersionDialog;

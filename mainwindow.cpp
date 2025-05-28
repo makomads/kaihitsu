@@ -168,6 +168,7 @@ MainWindow::MainWindow(QWidget *parent) :
     conf.fontsize   = settings.value("fontsize",defconf.fontsize).toInt();
     conf.lineheight = settings.value("lineheight",defconf.lineheight).toInt();
     conf.fontfamily = settings.value("fontfamily",defconf.fontfamily).toString();
+    conf.fontstyle = settings.value("fontstyle",defconf.fontstyle).toString();
     conf.maxfilesizemb = settings.value("maxfilesize_mb",defconf.maxfilesizemb).toInt();
     conf.warningfilesizemb = settings.value("warningfilesize_mb",defconf.warningfilesizemb).toInt();
     conf.scrollsize = settings.value("scrollsize",defconf.scrollsize).toInt();
@@ -300,6 +301,7 @@ ConfigData MainWindow::createDefaultConfig()
     confdata.fontsize   = 16;
     confdata.lineheight = 18;
     confdata.fontfamily = qApp->font().family();
+    confdata.fontstyle = "";
     confdata.maxfilesizemb = 100;
     confdata.warningfilesizemb = 30;
     confdata.scrollsize = 5;
@@ -492,6 +494,7 @@ void MainWindow::writeSettings()
     settings.setValue("fontsize",conf.fontsize);
     settings.setValue("lineheight",conf.lineheight);
     settings.setValue("fontfamily",conf.fontfamily);
+    settings.setValue("fontstyle",conf.fontstyle);
     settings.setValue("warningfilesize_mb",conf.warningfilesizemb);
     settings.setValue("maxfilesize_mb",conf.maxfilesizemb);
     settings.setValue("scrollsize",conf.scrollsize);

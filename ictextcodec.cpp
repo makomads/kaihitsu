@@ -105,6 +105,9 @@ QString IcTextCodec::detectEncoding(QByteArray &text, int hdsize) //static
         auto nerrors = iconv(codec, &inptr, &inlen, &outptr, &outlen);
         iconv_close(codec);
 
+        //末端のエラーはマルチバイト文字の切れ端の可能性があるのでエラーとみなさない
+        if(inlen<3)
+            nerrors = 0;
         if(nerrors < nmaxerrors){
             bestcodec = codecnames[i];
             nmaxerrors = nerrors;
